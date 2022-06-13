@@ -16,10 +16,10 @@ async function getvals() {
 }
 
 function print1Item(product) {
-  const { id, name, description, imageUrl, altTxt } = product;
+  const { _id, name, description, imageUrl, altTxt } = product;
   document.getElementById(
     "items"
-  ).innerHTML += `<a href="./product.html?id=${id}">
+  ).innerHTML += `<a href="./product.html?id=${_id}">
       <article>
         <img src="${imageUrl}" alt="${altTxt}">
         <h3 class="productName">${name}</h3>
