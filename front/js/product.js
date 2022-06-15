@@ -7,8 +7,6 @@ function getUrlId() {
 
 //console.log(getUrlId());
 
-function getProductNumber(id) {}
-
 //*  a import  **/
 
 async function getvals() {
@@ -40,6 +38,27 @@ function printProduct(product) {
   }
 }
 
+function addtocart() {
+  let id = getUrlId();
+  let color = document.getElementById("colors").value;
+  let number = document.getElementById("quantity").value;
+  let value = [color, number];
+  console.log(id);
+  console.log(color);
+  console.log(number);
+  if (number == 0) {
+    return;
+  }
+
+  if (localStorage.getItem(id)) {
+    if (localStorage[id][0] === color) localStorage[id][1] += number;
+  } else {
+    localStorage.setItem(id, value);
+  }
+}
+
+//function
+
 async function main() {
   const products = await getvals();
   let urlid = getUrlId();
@@ -48,6 +67,8 @@ async function main() {
       printProduct(product);
     }
   }
+  document.getElementById("addToCart").onclick = addtocart;
 }
 
 main();
+//addtocart();
