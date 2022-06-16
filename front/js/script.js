@@ -1,13 +1,13 @@
 let headersList = {
-  Accept: "*/*",
+  Accept: '*/*',
 };
 
 async function getvals() {
-  const response = await fetch("http://localhost:3000/api/products", {
-    method: "GET",
+  const response = await fetch('http://localhost:3000/api/products', {
+    method: 'GET',
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
   });
   const responseData = await response.json();
@@ -17,9 +17,10 @@ async function getvals() {
 
 function print1Item(product) {
   const { _id, name, description, imageUrl, altTxt } = product;
-  document.getElementById(
-    "items"
-  ).innerHTML += `<a href="./product.html?id=${_id}">
+  const a = document.createElement('a');
+  a.href = `./product.html?id=${_id}`;
+
+  document.getElementById('items').innerHTML += `<a href="./product.html?id=${_id}">
       <article>
         <img src="${imageUrl}" alt="${altTxt}">
         <h3 class="productName">${name}</h3>
