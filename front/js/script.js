@@ -17,15 +17,31 @@ async function getvals() {
 
 function print1Item(product) {
   const { _id, name, description, imageUrl, altTxt } = product;
-  document.getElementById(
-    "items"
-  ).innerHTML += `<a href="./product.html?id=${_id}">
-      <article>
-        <img src="${imageUrl}" alt="${altTxt}">
-        <h3 class="productName">${name}</h3>
-        <p class="productDescription">${description}</p>
-      </article>
-       </a>`;
+
+  const a = document.createElement("a");
+  a.href = `./product.html?id=${_id}`;
+  const article = document.createElement("article");
+
+  const img = document.createElement("img");
+  img.src = imageUrl;
+  img.alt = altTxt;
+
+  const h3 = document.createElement("h3");
+  h3.class = `"productName"`;
+  h3.textContent = name;
+
+  const p = document.createElement("p");
+  p.class = `"productDescription"`;
+  p.textContent = description;
+
+  let itemsdoc = document.getElementById("items");
+
+  article.appendChild(img);
+  article.appendChild(h3);
+  article.appendChild(p);
+
+  a.appendChild(article);
+  itemsdoc.appendChild(a);
 }
 
 async function main() {

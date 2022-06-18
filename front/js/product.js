@@ -18,23 +18,28 @@ async function getvals() {
     },
   });
   const responseData = await response.json();
-  //console.log(responseData);
   return responseData;
 }
 
 function printProduct(product) {
   const { name, description, imageUrl, altTxt, colors, price } = product;
   let collectionImg = document.getElementsByClassName("item__img")[0];
-  collectionImg.innerHTML = `<img src="${imageUrl}" alt="${altTxt}"></img>`;
 
-  document.getElementById("title").innerHTML = name;
-  document.getElementById("price").innerHTML = price;
-  document.getElementById("description").innerHTML = description;
+  const img = document.createElement("img");
+  img.src = imageUrl;
+  img.alt = altTxt;
+  collectionImg.appendChild(img);
 
+  document.getElementById("title").textContent = name;
+  document.getElementById("price").textContent = price;
+  document.getElementById("description").textContent = description;
+
+  const color = document.getElementById("colors");
   for (let i = 0; i < colors.length; i++) {
-    document.getElementById(
-      "colors"
-    ).innerHTML += `<option value="${colors[i]}">${colors[i]}</option>`;
+    const option = document.createElement("option");
+    option.value = colors[i];
+    option.textContent = colors[i];
+    color.appendChild(option);
   }
 }
 
