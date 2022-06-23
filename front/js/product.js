@@ -1,3 +1,5 @@
+import { addToCart } from "./cartManager.js";
+
 function getUrlId() {
   let str = window.location.href;
   let url = new URL(str);
@@ -9,8 +11,8 @@ function getUrlId() {
 
 //*  a import  **/
 
-async function getvals() {
-  const response = await fetch("http://localhost:3000/api/products", {
+async function getvals(id) {
+  const response = await fetch(`http://localhost:3000/api/products/${id}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -18,6 +20,7 @@ async function getvals() {
     },
   });
   const responseData = await response.json();
+  //console.log(responseData);
   return responseData;
 }
 
@@ -42,7 +45,7 @@ function printProduct(product) {
     color.appendChild(option);
   }
 }
-
+/*
 function addtocart() {
   let id = getUrlId();
   let color = document.getElementById("colors").value;
@@ -60,19 +63,27 @@ function addtocart() {
   } else {
     localStorage.setItem(id, value);
   }
-}
+}*/
 
 //function
 
 async function main() {
-  const products = await getvals();
   let urlid = getUrlId();
-  for (const product of products) {
-    if (urlid == product._id) {
-      printProduct(product);
+  const product = await getvals(urlid);
+
+  printProduct(product);
+
+  function addtocart() {
+    let id = getUrlId();
+    let color = document.getElementById("colors").value;
+    let quantity = +document.getElementById("quantity").value;
+
+    if (quantity == 0) {
+      return;
     }
+    addToCart({ ...product, color, quantity });
   }
-  document.getElementById("addToCart").onclick = addtocart;
+  document.getElementById("addToCart").addEventListener("click", addtocart);
 }
 
 main();
