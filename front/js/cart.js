@@ -221,12 +221,15 @@ async function command() {
   // aaa@aze.aze
   //var emailReg = new RegExp(/^([w-.]+)@((?:[w]+.)+)([a-zA-Z]{2,4})/i);
   let namePattern = /<+/g;
+  // namePattern = /^[ a-zA-Z\-\']+$/;
   namePattern =
-    /^(([A-Za-z]+[\-\']?)*([A-Za-z]+)?\s)+([A-Za-z]+[\-\']?)*([A-Za-z]+)?$/g;
+    /^[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'\-]+$/;
   //name = bob
   //name = aa-cc
+  let addressPattern =
+    /^[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ0-9\s,.'-]{3,}$/;
 
-  if (namePattern.test(firstname)) {
+  if (!namePattern.test(firstname)) {
     console.log(firstname);
     clearErrors();
     document.getElementById("firstNameErrorMsg").textContent =
@@ -234,17 +237,17 @@ async function command() {
     alert("name");
     return;
   }
-  if (namePattern.test(lastname)) {
+  if (!namePattern.test(lastname)) {
     clearErrors();
     document.getElementById("lastNameErrorMsg").textContent = "champ incorrect";
     return;
   }
-  if (namePattern.test(address)) {
+  if (!addressPattern.test(address)) {
     clearErrors();
     document.getElementById("addressErrorMsg").textContent = "champ incorrect";
     return;
   }
-  if (namePattern.test(city)) {
+  if (!namePattern.test(city)) {
     clearErrors();
     document.getElementById("cityErrorMsg").textContent = "champ incorrect";
     return;
