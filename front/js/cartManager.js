@@ -6,7 +6,7 @@ export function getCart() {
 }
 export function addToCart(data) {
   const cart = getCart();
-
+  if (data.color === "") return;
   if (data.quantity === 0) return;
   let item = cart.find(
     (item) => item.id === data.id && item.color === data.color
@@ -16,6 +16,7 @@ export function addToCart(data) {
     cart.push(item);
   } else item.quantity += data.quantity;
   setCart(cart);
+  alert("Produit ajouté");
 }
 
 export function removeFromCart(i) {
