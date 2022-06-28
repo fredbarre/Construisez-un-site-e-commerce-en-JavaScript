@@ -1,9 +1,13 @@
+//mise en place du panier
 export function setCart(json) {
   localStorage.setItem("cart", JSON.stringify(json || []));
 }
+//récupére le panier
 export function getCart() {
   return JSON.parse(localStorage.getItem("cart")) || [];
 }
+
+//ajout au panier du produit
 export function addToCart(data) {
   const cart = getCart();
   if (data.color === "") return;
@@ -11,6 +15,7 @@ export function addToCart(data) {
   let item = cart.find(
     (item) => item.id === data.id && item.color === data.color
   );
+  //console.log(item);
   if (!item) {
     item = data;
     let added = false;
@@ -30,13 +35,14 @@ export function addToCart(data) {
   alert("Produit ajouté");
 }
 
+//retire le produit dans le panier (stockage local) a l'indice i
 export function removeFromCart(i) {
   const cart = getCart();
 
   cart.splice(i, 1);
   setCart(cart);
 }
-
+//change la quantité du produit dans le panier (stockage local) a l'indice i
 export function quantityChangeFromCart(i, quantity) {
   const cart = getCart();
 
