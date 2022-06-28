@@ -83,8 +83,9 @@ async function main() {
     }
     addToCart({ ...product, color, quantity });
   }
-  document.getElementById("addToCart").addEventListener("click", addtocart);
+  document.getElementById("addToCart").addEventListener("click", function () {
+    addtocart();
+  });
 }
 
 main();
-//addtocart();
