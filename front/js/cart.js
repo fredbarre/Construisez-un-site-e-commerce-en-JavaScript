@@ -34,6 +34,7 @@ async function main() {
     console.log(quantityItem[i].value);*/
 }
 
+//affiche le produit
 function printcartitem(product) {
   const { name, imageUrl, altTxt, price, _id, quantity, color } = product;
   console.log(product);
@@ -117,41 +118,18 @@ function printcartitem(product) {
   article.appendChild(divcontent);
 
   cartitems.appendChild(article);
-
-  /*
-  document.getElementById(
-    "cart__items"
-  ).innerHTML += `<article class="cart__item" data-id="${_id}" data-color="${color}">
-                <div class="cart__item__img">
-                  <img src="${imageUrl}" alt="${altTxt}">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>${name}</h2>
-                    <p>${color}</p>
-                    <p>${price} €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantity}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article>`;*/
 }
 
+//affiche le prix total et la quantité totale
 function printTotal(totalQuantity, totalPrice) {
   document.getElementById("totalQuantity").textContent = totalQuantity;
   document.getElementById("totalPrice").textContent = totalPrice;
 }
 
+//retire l'affichage des produits,mise a zero de la quantité et le prix
 function reset() {
   let items = document.getElementById("cart__items");
-  let item = document.getElementById("cart__item");
+  //let item = document.getElementById("cart__item");
   //items.removeChild(items.lastElementChild);
   items.textContent = "";
   //document.getElementById("cart__items").innerHTML = "";
@@ -162,6 +140,7 @@ function reset() {
   document.getElementById("totalPrice").textContent = 0;
 }
 
+//affiche tous les produits et ajuste le prix total et la quantité totale
 function printAll() {
   const data = getCart();
   let totalquantity = 0;
@@ -184,22 +163,70 @@ function printAll() {
     });
   }
 }
-
+//actualise l'affichage
 function refresh() {
   reset();
   printAll();
 }
-
+//retire du panier le produit a l'indice i et actualise l'affichage
 function deleteItemrefresh(i) {
   removeFromCart(i);
   refresh();
 }
 
+//change la quantité du produit a l'indice i et actualise l'affichage
 function quantityChange(i, quantity) {
   quantityChangeFromCart(i, quantity);
   refresh();
 }
 
+//vérifie les champs de contact revoie true si correct sinon false
+function valueChecker() {
+  let firstname = document.getElementById("firstName").value;
+  let lastname = document.getElementById("lastName").value;
+  let address = document.getElementById("address").value;
+  let city = document.getElementById("city").value;
+  let email = document.getElementById("email").value;
+
+  let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
+  let namePattern =
+    /^[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'\-]+$/;
+
+  let addressPattern =
+    /^[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ0-9\s,.'-]{3,}$/;
+
+  if (!namePattern.test(firstname)) {
+    console.log(firstname);
+    clearErrors();
+    document.getElementById("firstNameErrorMsg").textContent =
+      "champ incorrect";
+    return false;
+  }
+  if (!namePattern.test(lastname)) {
+    clearErrors();
+    document.getElementById("lastNameErrorMsg").textContent = "champ incorrect";
+    return false;
+  }
+  if (!addressPattern.test(address)) {
+    clearErrors();
+    document.getElementById("addressErrorMsg").textContent = "champ incorrect";
+    return false;
+  }
+  if (!namePattern.test(city)) {
+    clearErrors();
+    document.getElementById("cityErrorMsg").textContent = "champ incorrect";
+    return false;
+  }
+
+  if (!emailPattern.test(email)) {
+    clearErrors();
+    document.getElementById("emailErrorMsg").value = "erreur email non valide";
+    return false;
+  }
+  return true;
+}
+//vérifie les champs de contacts puis envoie la commande l'api ( seulement l'id) obtient le l'orderid et le passe en paramètre pour l'ouverture de la page de confirmation
 async function command() {
   console.log("command");
   if (document.getElementById("totalQuantity").textContent == 0) {
@@ -212,54 +239,8 @@ async function command() {
   let city = document.getElementById("city").value;
   let email = document.getElementById("email").value;
 
-  /* let emailPattern = new RegExp(`\w+@\w+\.\w+`);
-  emailPattern = /^[a-zA-Z0-9.-_]+@{1}[a-zA-Z0-9.-_]+\.{1}[a-z]{2,10}$/;*/
-  let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+  if (!valueChecker()) return;
 
-  //
-  //abc@aae.com
-  // aaa@aze.aze
-  //var emailReg = new RegExp(/^([w-.]+)@((?:[w]+.)+)([a-zA-Z]{2,4})/i);
-  let namePattern = /<+/g;
-  // namePattern = /^[ a-zA-Z\-\']+$/;
-  namePattern =
-    /^[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'\-]+$/;
-  //name = bob
-  //name = aa-cc
-  let addressPattern =
-    /^[a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ0-9\s,.'-]{3,}$/;
-
-  if (!namePattern.test(firstname)) {
-    console.log(firstname);
-    clearErrors();
-    document.getElementById("firstNameErrorMsg").textContent =
-      "champ incorrect";
-    alert("name");
-    return;
-  }
-  if (!namePattern.test(lastname)) {
-    clearErrors();
-    document.getElementById("lastNameErrorMsg").textContent = "champ incorrect";
-    return;
-  }
-  if (!addressPattern.test(address)) {
-    clearErrors();
-    document.getElementById("addressErrorMsg").textContent = "champ incorrect";
-    return;
-  }
-  if (!namePattern.test(city)) {
-    clearErrors();
-    document.getElementById("cityErrorMsg").textContent = "champ incorrect";
-    return;
-  }
-
-  if (!emailPattern.test(email)) {
-    clearErrors();
-    document.getElementById("emailErrorMsg").value = "erreur email non valide";
-    return;
-  }
-
-  console.log("pattern OK");
   const contact = {
     firstName: firstname,
     lastName: lastname,
@@ -282,6 +263,14 @@ async function command() {
 
   console.log(JSON.stringify(params));
 
+  let result = await getOrderID(params);
+
+  console.log(result);
+
+  window.location.href = `./confirmation.html?orderid=${result.orderId}`;
+}
+//requete l'API pour obtenir l'orderId
+async function getOrderID(params) {
   let response = await fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     headers: {
@@ -291,11 +280,10 @@ async function command() {
   });
 
   let result = await response.json();
-  console.log(result);
-
-  window.location.href = `./confirmation.html?orderid=${result.orderId}`;
+  return result;
 }
 
+//retire l'affichage des erreurs
 function clearErrors() {
   document.getElementById("firstNameErrorMsg").textContent = "";
 
@@ -304,6 +292,8 @@ function clearErrors() {
   document.getElementById("addressErrorMsg").textContent = "";
 
   document.getElementById("cityErrorMsg").textContent = "";
+
+  document.getElementById("emailErrorMsg").textContent = "";
 }
 
 main();
