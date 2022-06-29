@@ -1,7 +1,4 @@
-let headersList = {
-  Accept: "*/*",
-};
-
+//requete l'api pour obtenir tous les produits
 async function getvals() {
   const response = await fetch("http://localhost:3000/api/products", {
     method: "GET",
@@ -14,7 +11,7 @@ async function getvals() {
   console.log(responseData);
   return responseData;
 }
-
+//insertion du produit dans le HTML pour l'affichage
 function print1Item(product) {
   const { _id, name, description, imageUrl, altTxt } = product;
 
@@ -43,7 +40,7 @@ function print1Item(product) {
   a.appendChild(article);
   itemsdoc.appendChild(a);
 }
-
+//fonction pricipale récupére les produits avec getvals() et affiche chaque produit a l'aide d'une boucle avec print1Item()
 async function main() {
   const products = await getvals();
   for (const product of products) {

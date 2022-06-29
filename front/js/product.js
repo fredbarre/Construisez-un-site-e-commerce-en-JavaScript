@@ -1,5 +1,6 @@
 import { addToCart } from "./cartManager.js";
 
+//récupère la veleur de id dans le lien
 function getUrlId() {
   let str = window.location.href;
   let url = new URL(str);
@@ -9,8 +10,7 @@ function getUrlId() {
 
 //console.log(getUrlId());
 
-//*  a import  **/
-
+//récupère le produit dans l'aoi
 async function getvals(id) {
   const response = await fetch(`http://localhost:3000/api/products/${id}`, {
     method: "GET",
@@ -23,7 +23,7 @@ async function getvals(id) {
   //console.log(responseData);
   return responseData;
 }
-
+//affiche le produit en le placant dans le HTML
 function printProduct(product) {
   const { name, description, imageUrl, altTxt, colors, price } = product;
   let collectionImg = document.getElementsByClassName("item__img")[0];
@@ -45,27 +45,8 @@ function printProduct(product) {
     color.appendChild(option);
   }
 }
-/*
-function addtocart() {
-  let id = getUrlId();
-  let color = document.getElementById("colors").value;
-  let number = document.getElementById("quantity").value;
-  let value = [color, number];
-  console.log(id);
-  console.log(color);
-  console.log(number);
-  if (number == 0) {
-    return;
-  }
 
-  if (localStorage.getItem(id)) {
-    if (localStorage[id][0] === color) localStorage[id][1] += number;
-  } else {
-    localStorage.setItem(id, value);
-  }
-}*/
-
-//function
+//fonction principale récupère l'id dans L'url avec getUrlId(), le produit correspondant avec getvals() l'ajoute au panier avec addtocart() au clic
 
 async function main() {
   let urlid = getUrlId();
@@ -74,7 +55,6 @@ async function main() {
   printProduct(product);
 
   function addtocart() {
-    let id = getUrlId();
     let color = document.getElementById("colors").value;
     let quantity = +document.getElementById("quantity").value;
 
