@@ -3,6 +3,12 @@ import {
   quantityChangeFromCart,
   removeFromCart,
 } from "./cartManager.js";
+
+/*fonction principale affiche tous les produits le prix total la quantité totale 
+puis au clic du bouton commander vérifie les paramètres de contact et envoie 
+la page de confirmation avec l'orderId
+
+*/
 async function main() {
   printAll();
 
@@ -129,13 +135,7 @@ function printTotal(totalQuantity, totalPrice) {
 //retire l'affichage des produits,mise a zero de la quantité et le prix
 function reset() {
   let items = document.getElementById("cart__items");
-  //let item = document.getElementById("cart__item");
-  //items.removeChild(items.lastElementChild);
   items.textContent = "";
-  //document.getElementById("cart__items").innerHTML = "";
-  /*document
-    .getElementById("cart__items")
-    .removeChild(document.getElementById("cart__item"));*/
   document.getElementById("totalQuantity").textContent = 0;
   document.getElementById("totalPrice").textContent = 0;
 }
@@ -239,6 +239,7 @@ async function command() {
   let city = document.getElementById("city").value;
   let email = document.getElementById("email").value;
 
+  //console.log(valueChecker());
   if (!valueChecker()) return;
 
   const contact = {
