@@ -10,8 +10,14 @@ export function getCart() {
 //ajout au panier du produit
 export function addToCart(data) {
   const cart = getCart();
-  if (data.color === "") return;
-  if (data.quantity === 0) return;
+  if (data.color === "") {
+    alert("Couleur non choisie");
+    return;
+  }
+  if (data.quantity === 0) {
+    alert("Entrer une quantitée");
+    return;
+  }
   let item = cart.find(
     (item) => item.id === data.id && item.color === data.color
   );
@@ -48,4 +54,8 @@ export function quantityChangeFromCart(i, quantity) {
 
   cart[i].quantity = +quantity;
   setCart(cart);
+}
+
+export function emptyCart() {
+  setCart(null);
 }
