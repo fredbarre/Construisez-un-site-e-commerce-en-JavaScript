@@ -57,11 +57,32 @@ async function main() {
   function addtocart() {
     let color = document.getElementById("colors").value;
     let quantity = +document.getElementById("quantity").value;
-
+    let _id = product._id;
+    let colors = product.colors;
+    let altTxt = product.altTxt;
+    let description = product.description;
+    let imageUrl = product.imageUrl;
+    let name = product.name;
+    /*
     if (quantity == 0) {
       return;
-    }
-    addToCart({ ...product, color, quantity });
+    }*/
+
+    //let data = { ...product, color, quantity };
+    console.log(product._id);
+    let data = { ...product, color, quantity };
+    data = {
+      _id,
+      colors,
+      altTxt,
+      description,
+      imageUrl,
+      name,
+      color,
+      quantity,
+    };
+
+    addToCart(data);
   }
   document.getElementById("addToCart").addEventListener("click", function () {
     addtocart();
