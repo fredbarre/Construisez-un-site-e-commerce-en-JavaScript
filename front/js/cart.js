@@ -1,4 +1,5 @@
 import {
+  emptyCart,
   getCart,
   quantityChangeFromCart,
   removeFromCart,
@@ -9,6 +10,22 @@ puis au clic du bouton commander vérifie les paramètres de contact et envoie
 la page de confirmation avec l'orderId
 
 */
+
+let products = await getvals();
+
+async function getvals() {
+  const response = await fetch("http://localhost:3000/api/products", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+  const responseData = await response.json();
+  console.log(responseData);
+  return responseData;
+}
+
 async function main() {
   printAll();
 
@@ -41,8 +58,8 @@ async function main() {
 }
 
 //affiche le produit
-function printcartitem(product) {
-  const { name, imageUrl, altTxt, price, _id, quantity, color } = product;
+function printcartitem(product, price) {
+  const { name, imageUrl, altTxt, _id, quantity, color } = product;
   console.log(product);
 
   let article = document.createElement("article");
@@ -140,14 +157,24 @@ function reset() {
   document.getElementById("totalPrice").textContent = 0;
 }
 
+function getPriceFromId(id, products) {
+  for (const product of products) {
+    if (product._id == id) {
+      return product.price;
+    }
+  }
+}
 //affiche tous les produits et ajuste le prix total et la quantité totale
-function printAll() {
+async function printAll() {
   const data = getCart();
   let totalquantity = 0;
   let totalPrice = 0;
+
   for (let i of data) {
-    printcartitem(i);
-    totalPrice += i.price * i.quantity;
+    let price = getPriceFromId(i._id, products);
+    printcartitem(i, price);
+
+    totalPrice += price * i.quantity;
     totalquantity += i.quantity;
   }
   printTotal(totalquantity, totalPrice);
@@ -168,6 +195,7 @@ function refresh() {
   reset();
   printAll();
 }
+
 //retire du panier le produit a l'indice i et actualise l'affichage
 function deleteItemrefresh(i) {
   removeFromCart(i);
@@ -267,6 +295,7 @@ async function command() {
   let result = await getOrderID(params);
 
   console.log(result);
+  emptyCart();
 
   window.location.href = `./confirmation.html?orderid=${result.orderId}`;
 }
