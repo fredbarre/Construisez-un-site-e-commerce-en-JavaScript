@@ -11,7 +11,7 @@ la page de confirmation avec l'orderId
 
 */
 
-let products = await getvals();
+let products;
 
 async function getvals() {
   const response = await fetch("http://localhost:3000/api/products", {
@@ -27,10 +27,11 @@ async function getvals() {
 }
 
 async function main() {
+  products = await getvals();
   printAll();
 
   document.getElementById("order").addEventListener("click", function () {
-    command();
+    submitOrder();
     //alert("test");
   });
 
@@ -108,6 +109,9 @@ function printcartitem(product, price) {
   input.min = "1";
   input.max = "100";
   input.value = quantity;
+  input.addEventListener("change", function () {
+    quantityChange(_id, color, input.value);
+  });
 
   let divsettingsdelete = document.createElement("div");
   divsettingsdelete.setAttribute(
@@ -118,6 +122,9 @@ function printcartitem(product, price) {
   let p4 = document.createElement("p");
   p4.setAttribute("class", "deleteItem");
   p4.textContent = "Supprimer";
+  p4.addEventListener("click", function () {
+    deleteItemrefresh(_id, color);
+  });
 
   let cartitems = document.getElementById("cart__items");
 
@@ -157,21 +164,21 @@ function reset() {
   document.getElementById("totalPrice").textContent = 0;
 }
 
-function getPriceFromId(id, products) {
+function getPriceFromId(id) {
   for (const product of products) {
     if (product._id == id) {
       return product.price;
     }
   }
 }
-//affiche tous les produits et ajuste le prix total et la quantité totale
+/**affiche tous les produits et ajuste le prix total et la quantité totale*/
 async function printAll() {
   const data = getCart();
   let totalquantity = 0;
   let totalPrice = 0;
 
   for (let i of data) {
-    let price = getPriceFromId(i._id, products);
+    let price = getPriceFromId(i._id);
     printcartitem(i, price);
 
     totalPrice += price * i.quantity;
@@ -181,14 +188,14 @@ async function printAll() {
 
   let delItem = document.getElementsByClassName("deleteItem");
   let quantityItem = document.getElementsByClassName("itemQuantity");
-  for (let i = 0; i < delItem.length; i++) {
+  /*for (let i = 0; i < delItem.length; i++) {
     delItem[i].addEventListener("click", function () {
       deleteItemrefresh(i);
     });
     quantityItem[i].addEventListener("change", function () {
       quantityChange(i, quantityItem[i].value);
     });
-  }
+  }*/
 }
 //actualise l'affichage
 function refresh() {
@@ -197,14 +204,14 @@ function refresh() {
 }
 
 //retire du panier le produit a l'indice i et actualise l'affichage
-function deleteItemrefresh(i) {
-  removeFromCart(i);
+function deleteItemrefresh(id, color) {
+  removeFromCart(id, color);
   refresh();
 }
 
 //change la quantité du produit a l'indice i et actualise l'affichage
-function quantityChange(i, quantity) {
-  quantityChangeFromCart(i, quantity);
+function quantityChange(id, color, quantity) {
+  quantityChangeFromCart(id, color, quantity);
   refresh();
 }
 
@@ -255,7 +262,7 @@ function valueChecker() {
   return true;
 }
 //vérifie les champs de contacts puis envoie la commande l'api ( seulement l'id) obtient le l'orderid et le passe en paramètre pour l'ouverture de la page de confirmation
-async function command() {
+async function submitOrder() {
   console.log("command");
   if (document.getElementById("totalQuantity").textContent == 0) {
     alert("Panier vide");

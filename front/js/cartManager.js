@@ -41,21 +41,33 @@ export function addToCart(data) {
   alert("Produit ajouté");
 }
 
-//retire le produit dans le panier (stockage local) a l'indice i
-export function removeFromCart(i) {
+//retire le produit avec id color dans le panier (stockage local) a l'indice i
+export function removeFromCart(id, color) {
   const cart = getCart();
+  let i = getIFromidColor(id, color);
+  if (i == -1) return;
 
   cart.splice(i, 1);
   setCart(cart);
 }
-//change la quantité du produit dans le panier (stockage local) a l'indice i
-export function quantityChangeFromCart(i, quantity) {
+//change la quantité du produit avec id color dans le panier (stockage local)
+export function quantityChangeFromCart(id, color, quantity) {
   const cart = getCart();
+  let i = getIFromidColor(id, color);
+  if (i == -1) return;
 
   cart[i].quantity = +quantity;
   setCart(cart);
 }
 
+/**récupère l'indice du produit avec id et color */
+function getIFromidColor(id, color) {
+  const cart = getCart();
+  for (let i = 0; i < cart.length; i++) {
+    if (cart[i]._id === id && cart[i].color === color) return i;
+  }
+  return -1;
+}
 export function emptyCart() {
   setCart(null);
 }
