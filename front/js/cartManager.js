@@ -69,6 +69,7 @@ export function quantityChangeFromCart(id, color, quantity) {
   setCart(cart);
 }
 
+/**vide le panier */
 export function emptyCart() {
   setCart(null);
 }
