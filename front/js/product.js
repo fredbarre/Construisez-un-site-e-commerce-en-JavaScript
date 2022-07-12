@@ -1,6 +1,6 @@
 import { addToCart } from "./cartManager.js";
 
-//récupère la veleur de id dans le lien
+/**récupère la veleur de id dans le lien*/
 function getUrlId() {
   let str = window.location.href;
   let url = new URL(str);
@@ -10,7 +10,7 @@ function getUrlId() {
 
 //console.log(getUrlId());
 
-//récupère le produit dans l'aoi
+/**récupère le produit qui possède l'id dans l'api*/
 async function getvals(id) {
   const response = await fetch(`http://localhost:3000/api/products/${id}`, {
     method: "GET",
@@ -19,11 +19,17 @@ async function getvals(id) {
       "Content-Type": "application/json",
     },
   });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
   const responseData = await response.json();
-  //console.log(responseData);
+  console.log(responseData);
   return responseData;
 }
-//affiche le produit en le placant dans le HTML
+/**affiche le produit en le placant dans le HTML*/
 function printProduct(product) {
   const { name, description, imageUrl, altTxt, colors, price } = product;
   let collectionImg = document.getElementsByClassName("item__img")[0];
@@ -46,47 +52,51 @@ function printProduct(product) {
   }
 }
 
-//fonction principale récupère l'id dans L'url avec getUrlId(), le produit correspondant avec getvals() l'ajoute au panier avec addtocart() au clic
+/**fonction principale récupère l'id dans L'url avec getUrlId(), le produit correspondant avec getvals() l'ajoute au panier avec addtocart() au clic*/
 
 async function main() {
-  let urlid = getUrlId();
-  const product = await getvals(urlid);
+  try {
+    let urlid = getUrlId();
+    const product = await getvals(urlid);
 
-  printProduct(product);
+    printProduct(product);
 
-  function addtocart() {
-    let color = document.getElementById("colors").value;
-    let quantity = +document.getElementById("quantity").value;
-    let _id = product._id;
-    let colors = product.colors;
-    let altTxt = product.altTxt;
-    let description = product.description;
-    let imageUrl = product.imageUrl;
-    let name = product.name;
-    /*
-    if (quantity == 0) {
-      return;
-    }*/
+    function addtocart() {
+      let color = document.getElementById("colors").value;
+      let quantity = +document.getElementById("quantity").value;
+      let _id = product._id;
+      let colors = product.colors;
+      let altTxt = product.altTxt;
+      let description = product.description;
+      let imageUrl = product.imageUrl;
+      let name = product.name;
+      /*
+      if (quantity == 0) {
+        return;
+      }*/
 
-    //let data = { ...product, color, quantity };
-    console.log(product._id);
-    let data = { ...product, color, quantity };
-    data = {
-      _id,
-      colors,
-      altTxt,
-      description,
-      imageUrl,
-      name,
-      color,
-      quantity,
-    };
+      //let data = { ...product, color, quantity };
+      console.log(product._id);
+      let data = { ...product, color, quantity };
+      data = {
+        _id,
+        colors,
+        altTxt,
+        description,
+        imageUrl,
+        name,
+        color,
+        quantity,
+      };
 
-    addToCart(data);
+      addToCart(data);
+    }
+    document.getElementById("addToCart").addEventListener("click", function () {
+      addtocart();
+    });
+  } catch (err) {
+    alert(err + " recharger la page");
   }
-  document.getElementById("addToCart").addEventListener("click", function () {
-    addtocart();
-  });
 }
 
 main();

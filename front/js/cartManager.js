@@ -1,13 +1,13 @@
-//mise en place du panier
+/**mise en place du panier*/
 export function setCart(json) {
   localStorage.setItem("cart", JSON.stringify(json || []));
 }
-//récupére le panier
+/**récupére le panier*/
 export function getCart() {
   return JSON.parse(localStorage.getItem("cart")) || [];
 }
 
-//ajout au panier du produit
+/**ajout au panier du produit*/
 export function addToCart(data) {
   const cart = getCart();
   if (data.color === "") {
@@ -41,7 +41,16 @@ export function addToCart(data) {
   alert("Produit ajouté");
 }
 
-//retire le produit avec id color dans le panier (stockage local) a l'indice i
+/**récupère l'indice du produit avec id et color */
+function getIFromidColor(id, color) {
+  const cart = getCart();
+  for (let i = 0; i < cart.length; i++) {
+    if (cart[i]._id === id && cart[i].color === color) return i;
+  }
+  return -1;
+}
+
+/**retire le produit avec id color dans le panier (stockage local) a l'indice i*/
 export function removeFromCart(id, color) {
   const cart = getCart();
   let i = getIFromidColor(id, color);
@@ -50,7 +59,7 @@ export function removeFromCart(id, color) {
   cart.splice(i, 1);
   setCart(cart);
 }
-//change la quantité du produit avec id color dans le panier (stockage local)
+/**change la quantité du produit avec id color dans le panier (stockage local)*/
 export function quantityChangeFromCart(id, color, quantity) {
   const cart = getCart();
   let i = getIFromidColor(id, color);
@@ -60,14 +69,6 @@ export function quantityChangeFromCart(id, color, quantity) {
   setCart(cart);
 }
 
-/**récupère l'indice du produit avec id et color */
-function getIFromidColor(id, color) {
-  const cart = getCart();
-  for (let i = 0; i < cart.length; i++) {
-    if (cart[i]._id === id && cart[i].color === color) return i;
-  }
-  return -1;
-}
 export function emptyCart() {
   setCart(null);
 }

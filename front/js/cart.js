@@ -5,14 +5,9 @@ import {
   removeFromCart,
 } from "./cartManager.js";
 
-/*fonction principale affiche tous les produits le prix total la quantité totale 
-puis au clic du bouton commander vérifie les paramètres de contact et envoie 
-la page de confirmation avec l'orderId
-
-*/
-
 let products;
 
+/**requete l'api pour obtenir tous les produits*/
 async function getvals() {
   const response = await fetch("http://localhost:3000/api/products", {
     method: "GET",
@@ -21,44 +16,30 @@ async function getvals() {
       "Content-Type": "application/json",
     },
   });
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
   const responseData = await response.json();
   console.log(responseData);
   return responseData;
 }
 
-async function main() {
-  products = await getvals();
-  printAll();
-
-  document.getElementById("order").addEventListener("click", function () {
-    submitOrder();
-    //alert("test");
+/**requete l'API pour obtenir l'orderId*/
+async function getOrderID(params) {
+  let response = await fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(params),
   });
 
-  function processForm(e) {
-    if (e.preventDefault) e.preventDefault();
-
-    /* do what you want with the form */
-    //command();
-
-    // You must return false to prevent the default form behavior
-    return false;
-  }
-
-  var form = document.getElementsByClassName("cart__order__form")[0];
-  if (form.attachEvent) {
-    form.attachEvent("submit", processForm);
-  } else {
-    form.addEventListener("submit", processForm);
-  }
-
-  // document.getElementById("order").addEventListener("click", command);
-
-  /* console.log(i);
-    console.log(quantityItem[i].value);*/
+  let result = await response.json();
+  return result;
 }
 
-//affiche le produit
+/**affiche le produit*/
 function printcartitem(product, price) {
   const { name, imageUrl, altTxt, _id, quantity, color } = product;
   console.log(product);
@@ -150,20 +131,20 @@ function printcartitem(product, price) {
   cartitems.appendChild(article);
 }
 
-//affiche le prix total et la quantité totale
+/**affiche le prix total et la quantité totale*/
 function printTotal(totalQuantity, totalPrice) {
   document.getElementById("totalQuantity").textContent = totalQuantity;
   document.getElementById("totalPrice").textContent = totalPrice;
 }
 
-//retire l'affichage des produits,mise a zero de la quantité et le prix
+/**retire l'affichage des produits,mise a zero de la quantité et le prix*/
 function reset() {
   let items = document.getElementById("cart__items");
   items.textContent = "";
   document.getElementById("totalQuantity").textContent = 0;
   document.getElementById("totalPrice").textContent = 0;
 }
-
+/**Revoie le prix qui correspont au produit avec l'id */
 function getPriceFromId(id) {
   for (const product of products) {
     if (product._id == id) {
@@ -185,17 +166,6 @@ async function printAll() {
     totalquantity += i.quantity;
   }
   printTotal(totalquantity, totalPrice);
-
-  let delItem = document.getElementsByClassName("deleteItem");
-  let quantityItem = document.getElementsByClassName("itemQuantity");
-  /*for (let i = 0; i < delItem.length; i++) {
-    delItem[i].addEventListener("click", function () {
-      deleteItemrefresh(i);
-    });
-    quantityItem[i].addEventListener("change", function () {
-      quantityChange(i, quantityItem[i].value);
-    });
-  }*/
 }
 //actualise l'affichage
 function refresh() {
@@ -213,6 +183,19 @@ function deleteItemrefresh(id, color) {
 function quantityChange(id, color, quantity) {
   quantityChangeFromCart(id, color, quantity);
   refresh();
+}
+
+/**retire l'affichage des erreurs*/
+function clearErrors() {
+  document.getElementById("firstNameErrorMsg").textContent = "";
+
+  document.getElementById("lastNameErrorMsg").textContent = "";
+
+  document.getElementById("addressErrorMsg").textContent = "";
+
+  document.getElementById("cityErrorMsg").textContent = "";
+
+  document.getElementById("emailErrorMsg").textContent = "";
 }
 
 //vérifie les champs de contact revoie true si correct sinon false
@@ -263,7 +246,6 @@ function valueChecker() {
 }
 //vérifie les champs de contacts puis envoie la commande l'api ( seulement l'id) obtient le l'orderid et le passe en paramètre pour l'ouverture de la page de confirmation
 async function submitOrder() {
-  console.log("command");
   if (document.getElementById("totalQuantity").textContent == 0) {
     alert("Panier vide");
     return;
@@ -306,31 +288,34 @@ async function submitOrder() {
 
   window.location.href = `./confirmation.html?orderid=${result.orderId}`;
 }
-//requete l'API pour obtenir l'orderId
-async function getOrderID(params) {
-  let response = await fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
-    body: JSON.stringify(params),
-  });
 
-  let result = await response.json();
-  return result;
-}
+/**fonction principale affiche tous les produits le prix total la quantité totale 
+puis au clic du bouton commander vérifie les paramètres de contact et envoie 
+la page de confirmation avec l'orderId*/
+async function main() {
+  try {
+    products = await getvals();
+    printAll();
 
-//retire l'affichage des erreurs
-function clearErrors() {
-  document.getElementById("firstNameErrorMsg").textContent = "";
+    document.getElementById("order").addEventListener("click", function () {
+      submitOrder();
+    });
 
-  document.getElementById("lastNameErrorMsg").textContent = "";
+    function processForm(e) {
+      if (e.preventDefault) e.preventDefault();
 
-  document.getElementById("addressErrorMsg").textContent = "";
+      return false;
+    }
 
-  document.getElementById("cityErrorMsg").textContent = "";
-
-  document.getElementById("emailErrorMsg").textContent = "";
+    var form = document.getElementsByClassName("cart__order__form")[0];
+    if (form.attachEvent) {
+      form.attachEvent("submit", processForm);
+    } else {
+      form.addEventListener("submit", processForm);
+    }
+  } catch (err) {
+    alert(err + " recharger la page");
+  }
 }
 
 main();

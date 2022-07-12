@@ -1,4 +1,4 @@
-//requete l'api pour obtenir tous les produits
+/**requete l'api pour obtenir tous les produits*/
 async function getvals() {
   const response = await fetch("http://localhost:3000/api/products", {
     method: "GET",
@@ -7,11 +7,17 @@ async function getvals() {
       "Content-Type": "application/json",
     },
   });
+
+  if (!response.ok) {
+    const message = `An error has occured: ${response.status}`;
+    throw new Error(message);
+  }
+
   const responseData = await response.json();
   console.log(responseData);
   return responseData;
 }
-//insertion du produit dans le HTML pour l'affichage
+/**insertion du produit dans le HTML pour l'affichage*/
 function print1Item(product) {
   const { _id, name, description, imageUrl, altTxt } = product;
 
@@ -40,11 +46,16 @@ function print1Item(product) {
   a.appendChild(article);
   itemsdoc.appendChild(a);
 }
-//fonction pricipale récupére les produits avec getvals() et affiche chaque produit a l'aide d'une boucle avec print1Item()
+/**fonction pricipale récupére les produits avec getvals() et affiche chaque produit a l'aide d'une boucle avec print1Item()*/
 async function main() {
-  const products = await getvals();
-  for (const product of products) {
-    print1Item(product);
+  try {
+    const products = await getvals();
+
+    for (const product of products) {
+      print1Item(product);
+    }
+  } catch (err) {
+    alert(err + " recharger la page");
   }
 }
 
