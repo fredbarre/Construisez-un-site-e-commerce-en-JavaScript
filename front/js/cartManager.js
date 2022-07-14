@@ -19,9 +19,10 @@ export function addToCart(data) {
     return;
   }
   let item = cart.find(
-    (item) => item.id === data.id && item.color === data.color
+    (item) => item._id === data._id && item.color === data.color
   );
-  //console.log(item);
+  console.log(item);
+  console.log(data);
   if (!item) {
     item = data;
     let added = false;
