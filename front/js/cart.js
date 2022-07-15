@@ -91,6 +91,15 @@ function printcartitem(product, price) {
   input.max = "100";
   input.value = quantity;
   input.addEventListener("change", function () {
+    if (input.value > 100) {
+      alert("quantitée supérieure à 100");
+      input.value = 100;
+    }
+    if (input.value < 1) {
+      alert("quantitée inférieure à 0");
+      1;
+      input.value = 1;
+    }
     quantityChange(_id, color, input.value);
   });
 
