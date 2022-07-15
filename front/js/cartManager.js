@@ -14,10 +14,26 @@ export function addToCart(data) {
     alert("Couleur non choisie");
     return;
   }
-  if (data.quantity === 0) {
-    alert("Entrer une quantitée");
+  if (data.quantity <= 0 || data.quantity > 100) {
+    alert("Entrer une quantitée correcte");
     return;
   }
+  for (let i = 0; i < cart.length; i++) {
+    //console.log(cart[i]._id);
+    //console.log(data._id);
+    if (cart[i]._id === data._id && cart[i].color === data.color) {
+      let currentQuantity = cart[i].quantity;
+      if (currentQuantity + data.quantity > 100) {
+        alert(
+          "Quantitée du produit courante= " +
+            currentQuantity +
+            " Quantitée maximale dépassée(100)"
+        );
+        return;
+      }
+    }
+  }
+
   let item = cart.find(
     (item) => item._id === data._id && item.color === data.color
   );
@@ -51,7 +67,7 @@ function getIFromidColor(id, color) {
   return -1;
 }
 
-/**retire le produit avec id color dans le panier (stockage local) a l'indice i*/
+/**retire le produit avec id color dans le panier (stockage local)*/
 export function removeFromCart(id, color) {
   const cart = getCart();
   let i = getIFromidColor(id, color);
