@@ -173,13 +173,13 @@ function refresh() {
   printAll();
 }
 
-//retire du panier le produit a l'indice i et actualise l'affichage
+//retire du panier le produit avec id et color et actualise l'affichage
 function deleteItemrefresh(id, color) {
   removeFromCart(id, color);
   refresh();
 }
 
-//change la quantité du produit a l'indice i et actualise l'affichage
+//change la quantité du produit avec id et color et actualise l'affichage
 function quantityChange(id, color, quantity) {
   quantityChangeFromCart(id, color, quantity);
   refresh();
