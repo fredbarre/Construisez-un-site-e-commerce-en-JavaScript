@@ -1,6 +1,6 @@
 #Projet 5 Construisez un site e-commerce en JavaScript
 
-depot: https://github.com/fredbarre/projet5
+depot: https://github.com/fredbarre/Construisez-un-site-e-commerce-en-JavaScript
 
 # Kanap
 
